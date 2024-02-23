@@ -1,15 +1,21 @@
 package logic;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
+
 public class CardUtil {
 	
 	public static boolean isExistsInList(UnitCard card, ArrayList<UnitCard> list) {
 		
 		//TODO: Fill Code
+
+		for (UnitCard c : list) {
+			if (c.equals(card)) {
+				return true;
+			}
+		}
 		return false;
 
 	}
@@ -17,13 +23,26 @@ public class CardUtil {
 	public static boolean isExistsInList(UnitDeck deck, ArrayList<UnitDeck> list) {
 		
 		//TODO: Fill Code
+
+		for (UnitDeck d : list) {
+			if (d.equals(deck)) {
+				return true;
+			}
+		}
 		return false;
+
 
 	}
 	
 	public static boolean cardExistsInDeckList(ArrayList<UnitDeck> deckList, UnitCard cardToTest) {
 		
 		//TODO: Fill Code
+
+		for (UnitDeck c : deckList) {
+			if (c.existsInDeck(cardToTest)) {
+				return true;
+			}
+		}
 		return false;
 	}
 	
@@ -34,7 +53,39 @@ public class CardUtil {
 
 		//TODO: Fill Code
 		
-		return null;
+		Scanner scan;
+		try {
+			scan = new Scanner(fileToRead);
+			ArrayList<UnitCard> tempCards = new ArrayList<UnitCard>();
+			while (scan.hasNextLine()) {
+				String[] parts;
+				try {
+				parts = scan.nextLine().split(",", 5);
+				String cardName = parts[0];
+				int bloodCost = Integer.parseInt(parts[1]);
+				int power = Integer.parseInt(parts[2]);
+				int health = Integer.parseInt(parts[3]);
+				String flavorText = parts[4];
+				UnitCard newCard = new UnitCard(cardName, bloodCost, power, health, flavorText);
+				tempCards.add(newCard);
+				} catch (Exception e) {
+					// TODO: handle exception
+					System.out.println("File contains string with incorrect format!");
+					scan.close();
+					return null;
+				}
+				for (UnitCard c : tempCards) {
+					cardsFromFile.add(c);
+				}
+				
+			}
+			scan.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Cannot find file!");
+			return null;
+		}
+		return cardsFromFile;
 	}
 
 	public static void printCardList(ArrayList<UnitCard> cardList, boolean verbose) {
